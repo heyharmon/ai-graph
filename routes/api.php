@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GraphController;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -13,6 +14,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Auth
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
+
+    // Graph routes
+    Route::apiResource('graphs', GraphController::class);
 
     // Admin-only routes
     Route::middleware('admin')->group(function () {

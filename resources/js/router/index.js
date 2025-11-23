@@ -5,6 +5,9 @@ import Register from '@/pages/auth/Register.vue'
 import UsersIndex from '@/pages/users/UsersIndex.vue'
 import UserShow from '@/pages/users/UserShow.vue'
 import Dashboard from '@/pages/dashboard/Dashboard.vue'
+import GraphsIndex from '@/pages/graphs/GraphsIndex.vue'
+import GraphCreate from '@/pages/graphs/GraphCreate.vue'
+import GraphShow from '@/pages/graphs/GraphShow.vue'
 
 const routes = [
   {
@@ -36,6 +39,24 @@ const routes = [
         name: 'users.show',
         component: UserShow,
         meta: { requiresAuth: true, roles: ['admin'] }
+    },
+    {
+        path: '/graphs',
+        name: 'graphs.index',
+        component: GraphsIndex,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/graphs/create',
+        name: 'graphs.create',
+        component: GraphCreate,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/graphs/:id',
+        name: 'graphs.show',
+        component: GraphShow,
+        meta: { requiresAuth: true }
     },
 ]
 
