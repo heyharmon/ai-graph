@@ -17,4 +17,7 @@ export default defineConfig({
             '@': '/resources/js',
         },
     },
+    optimizeDeps: {
+        include: ['@vue-flow/core'],
+    },
 });

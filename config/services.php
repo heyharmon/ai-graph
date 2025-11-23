@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'exa' => [
+        'api_key' => env('EXA_API_KEY'),
+    ],
+
 ];

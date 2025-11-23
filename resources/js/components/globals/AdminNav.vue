@@ -81,10 +81,12 @@ const toggleMobileAdmin = () => {
                 <router-link to="/" class="text-lg font-semibold text-neutral-900">Generator Builder</router-link>
 
                 <div v-if="isAuthenticated" class="hidden items-center gap-1 text-sm font-medium text-neutral-500 md:flex">
+                    <router-link :to="{ name: 'graphs.index' }" :class="[navLinkClasses, { [activeNavClasses]: isRouteActive('graphs.index') }]">
+                        Graphs
+                    </router-link>
                     <router-link v-if="isAdmin" :to="{ name: 'dashboard' }" :class="[navLinkClasses, { [activeNavClasses]: isRouteActive('dashboard') }]">
                         Dashboard
                     </router-link>
-
                 </div>
                 <button
                     v-if="isAuthenticated"
@@ -173,6 +175,16 @@ const toggleMobileAdmin = () => {
                 <div class="border-t border-neutral-200 bg-white/95 pb-6 pt-4 shadow-sm">
                     <div class="mx-auto flex w-full max-w-[1563px] flex-col gap-4 px-4 sm:px-6 lg:px-8">
                         <div class="space-y-2 text-sm font-medium text-neutral-600">
+                            <router-link
+                                :to="{ name: 'graphs.index' }"
+                                :class="[
+                                    'block rounded-xl px-3 py-2 transition hover:bg-neutral-100 hover:text-neutral-900',
+                                    { 'bg-neutral-900 text-white hover:bg-neutral-900 hover:text-white': isRouteActive('graphs.index') }
+                                ]"
+                                @click="closeMobileMenu"
+                            >
+                                Graphs
+                            </router-link>
                             <router-link
                                 v-if="isAdmin"
                                 :to="{ name: 'dashboard' }"
