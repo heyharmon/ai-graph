@@ -48,83 +48,78 @@ const viewSources = () => {
 
 <template>
     <DefaultLayout>
-        <div class="flex min-h-screen items-center justify-center bg-neutral-50 py-12">
-            <div class="w-full max-w-3xl">
-            <div class="mb-8 text-center">
-                <h1 class="mb-2 text-3xl font-bold text-neutral-900">Create Your Graph</h1>
-                <p class="text-neutral-600">Enter your website URL to discover all pages</p>
+        <div class="container mx-auto px-4 py-8">
+            <div class="mb-6">
+                <h1 class="text-2xl font-bold text-neutral-900">Create Graph</h1>
             </div>
 
-            <div class="rounded-lg border border-neutral-200 bg-white p-8 shadow-sm">
-                <!-- Input Form -->
-                <div v-if="!graphData" class="space-y-4">
-                    <div v-if="error" class="rounded-md bg-red-50 p-4 text-sm text-red-500">
-                        {{ error }}
-                    </div>
-
-                    <div>
-                        <label for="website_url" class="mb-1 block text-sm font-medium text-neutral-700">
-                            Website URL
-                        </label>
-                        <input
-                            id="website_url"
-                            v-model="websiteUrl"
-                            type="url"
-                            placeholder="https://example.com"
-                            required
-                            :disabled="loading"
-                            class="w-full rounded-md border border-neutral-300 px-3 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none disabled:opacity-70"
-                        />
-                        <p class="mt-1 text-xs text-neutral-500">
-                            We'll crawl your sitemap.xml to discover all pages (up to 1,000 pages)
-                        </p>
-                    </div>
-
-                    <div>
-                        <button
-                            type="button"
-                            @click="submitWebsite"
-                            :disabled="loading || !websiteUrl.trim()"
-                            class="w-full rounded-md bg-neutral-900 px-4 py-2 text-white hover:bg-neutral-800 focus:outline-none disabled:opacity-70"
-                        >
-                            <span v-if="loading">Crawling website...</span>
-                            <span v-else>Start Crawling</span>
-                        </button>
-                    </div>
+            <!-- Input Form -->
+            <div v-if="!graphData" class="max-w-2xl space-y-4">
+                <div v-if="error" class="rounded-md bg-red-50 p-4 text-sm text-red-500">
+                    {{ error }}
                 </div>
 
-                <!-- Success Message -->
-                <div v-else class="space-y-6">
-                    <div class="rounded-md bg-green-50 p-6">
-                        <h2 class="mb-2 text-lg font-semibold text-green-900">Crawl Complete!</h2>
-                        <p class="mb-4 text-green-700">
-                            Successfully discovered <strong>{{ totalSources }}</strong> page{{ totalSources !== 1 ? 's' : '' }}
-                        </p>
-                        <p class="text-sm text-green-600">
-                            Redirecting to sources page...
-                        </p>
-                    </div>
+                <div>
+                    <label for="website_url" class="mb-1 block text-sm font-medium text-neutral-700">
+                        Website URL
+                    </label>
+                    <input
+                        id="website_url"
+                        v-model="websiteUrl"
+                        type="url"
+                        placeholder="https://example.com"
+                        required
+                        :disabled="loading"
+                        class="w-full rounded-md border border-neutral-300 px-3 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none disabled:opacity-70"
+                    />
+                    <p class="mt-1 text-xs text-neutral-500">
+                        We'll crawl your sitemap.xml to discover all pages (up to 1,000 pages)
+                    </p>
+                </div>
 
-                    <div class="flex justify-end space-x-4">
-                        <button
-                            type="button"
-                            @click="graphData = null; totalSources = 0"
-                            class="rounded-md border border-neutral-300 px-4 py-2 text-neutral-700 hover:bg-neutral-50 focus:outline-none"
-                        >
-                            Start Over
-                        </button>
-                        <button
-                            type="button"
-                            @click="viewSources"
-                            class="rounded-md bg-neutral-900 px-4 py-2 text-white hover:bg-neutral-800 focus:outline-none"
-                        >
-                            View Sources
-                        </button>
-                    </div>
+                <div>
+                    <button
+                        type="button"
+                        @click="submitWebsite"
+                        :disabled="loading || !websiteUrl.trim()"
+                        class="rounded-md bg-neutral-900 px-4 py-2 text-white hover:bg-neutral-800 focus:outline-none disabled:opacity-70"
+                    >
+                        <span v-if="loading">Crawling website...</span>
+                        <span v-else>Start Crawling</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div v-else class="max-w-2xl space-y-6">
+                <div class="rounded-md bg-green-50 p-6">
+                    <h2 class="mb-2 text-lg font-semibold text-green-900">Crawl Complete!</h2>
+                    <p class="mb-4 text-green-700">
+                        Successfully discovered <strong>{{ totalSources }}</strong> page{{ totalSources !== 1 ? 's' : '' }}
+                    </p>
+                    <p class="text-sm text-green-600">
+                        Redirecting to sources page...
+                    </p>
+                </div>
+
+                <div class="flex justify-end space-x-4">
+                    <button
+                        type="button"
+                        @click="graphData = null; totalSources = 0"
+                        class="rounded-md border border-neutral-300 px-4 py-2 text-neutral-700 hover:bg-neutral-50 focus:outline-none"
+                    >
+                        Start Over
+                    </button>
+                    <button
+                        type="button"
+                        @click="viewSources"
+                        class="rounded-md bg-neutral-900 px-4 py-2 text-white hover:bg-neutral-800 focus:outline-none"
+                    >
+                        View Sources
+                    </button>
                 </div>
             </div>
         </div>
-    </div>
     </DefaultLayout>
 </template>
 

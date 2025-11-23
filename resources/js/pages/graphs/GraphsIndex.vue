@@ -37,10 +37,7 @@ const formatDate = (date) => {
     <DefaultLayout>
         <div class="container mx-auto px-4 py-8">
             <div class="mb-6 flex items-center justify-between">
-                <div>
-                    <h1 class="text-2xl font-bold text-neutral-900">Graphs</h1>
-                    <p class="text-sm text-neutral-500">Manage your graphs</p>
-                </div>
+                <h1 class="text-2xl font-bold text-neutral-900">Graphs</h1>
                 <router-link
                     :to="{ name: 'graphs.create' }"
                     class="inline-flex items-center rounded-md border border-neutral-900 bg-neutral-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-neutral-800"
@@ -49,13 +46,13 @@ const formatDate = (date) => {
                 </router-link>
             </div>
 
+            <div v-if="error" class="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-600">
+                {{ error }}
+            </div>
+
             <div class="rounded-lg border border-neutral-200 bg-white shadow-sm">
-                <div class="border-b border-neutral-200 px-4 py-3">
-                    <div class="flex flex-wrap items-center justify-between gap-3">
-                        <h2 class="text-lg font-semibold text-neutral-900">All Graphs</h2>
-                        <div v-if="loading" class="text-xs font-semibold uppercase tracking-wide text-neutral-400">Loading…</div>
-                    </div>
-                    <p v-if="error" class="mt-2 text-sm text-red-600">{{ error }}</p>
+                <div v-if="loading" class="border-b border-neutral-200 px-4 py-3">
+                    <div class="text-xs font-semibold uppercase tracking-wide text-neutral-400">Loading…</div>
                 </div>
 
                 <div class="hidden md:block">

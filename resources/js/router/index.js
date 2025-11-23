@@ -4,7 +4,7 @@ import Login from '@/pages/auth/Login.vue'
 import Register from '@/pages/auth/Register.vue'
 import UsersIndex from '@/pages/users/UsersIndex.vue'
 import UserShow from '@/pages/users/UserShow.vue'
-import Sources from '@/pages/sources/Sources.vue'
+import SourcesIndex from '@/pages/sources/SourcesIndex.vue'
 import GraphsIndex from '@/pages/graphs/GraphsIndex.vue'
 import GraphsCreate from '@/pages/graphs/GraphsCreate.vue'
 
@@ -54,7 +54,7 @@ const routes = [
     {
         path: '/graphs/:id/sources',
         name: 'sources.index',
-        component: Sources,
+        component: SourcesIndex,
         meta: { requiresAuth: true }
     },
 ]
