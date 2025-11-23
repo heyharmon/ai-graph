@@ -1,81 +1,116 @@
-Phase 2: SEO Intelligence Layer
-Objective
-Transform the business knowledge graph into an SEO strategy tool by overlaying search market data, generating keyword clusters aligned to the semantic structure, and tracking performance.
-Core Capabilities
-1. Semantic Keyword Generation
-* For each entity in the knowledge graph, generate relevant keyword variations:
-    * Pillar Keywords: Main terms for services/products
-    * Cluster Keywords: Supporting terms and variations
-    * Location-Modified Keywords: Service + location combinations
-    * Customer-Intent Keywords: Persona-specific search terms
-* Generate long-tail variations based on entity relationships
-* Use LLM to produce natural keyword variations people actually search
-* Organize keywords hierarchically aligned to graph structure
-2. Search Volume Integration
-* Integrate with keyword research APIs (Google Keyword Planner, SEMrush, Ahrefs, or alternatives)
-* Fetch search volume data for all generated keywords
-* Attribute volume to entities in knowledge graph
-* Calculate aggregate search demand for:
-    * Each service/product
-    * Each location
-    * Each customer type
-    * Each entity combination
-* Show total addressable search market
-3. Ranking Tracking
-* Track current search engine rankings for all keywords
-* Attribute rankings to specific pages in the knowledge graph
-* Calculate ranking distribution across entities
-* Show which parts of business have strong vs. weak search visibility
-* Historical rank tracking over time
-4. Opportunity Analysis
-* Identify high-value gaps:
-    * High search volume entities with no/low rankings
-    * Entity relationships with search demand but no content
-    * Geographic areas with demand but weak presence
-    * Customer segments with search volume but no targeting
-* Score opportunities based on:
-    * Search volume potential
-    * Current ranking gap
-    * Competitive difficulty
-    * Strategic importance to business
-* Prioritized action list
-5. Enhanced Visualization
-* Overlay search data onto knowledge graph:
-    * Node size reflects search volume
-    * Node color intensity shows ranking strength
-    * Highlight high-opportunity entities
-* Toggle between "business structure" view and "search market" view
-* Heat maps for geographic search demand
-* Trend lines for ranking changes
-6. Strategic Insights Dashboard
-* SEO health score based on graph coverage vs. search demand
-* Content gap analysis: missing pages for valuable entity combinations
-* Competitive positioning: how semantic footprint compares to competitors
-* Recommendations engine:
-    * "Create content for [Service] in [Location] - 5,000 monthly searches, currently unranked"
-    * "Strengthen [Customer Type] targeting for [Service] - weak rankings in growing market"
-* Export action plans and keyword clusters
-User Flow
-1. User views their Phase 1 knowledge graph
-2. User connects search data source (API key or integration)
-3. System generates keyword clusters from graph entities
-4. System fetches search volume and ranking data
-5. Graph updates with search intelligence overlay
-6. User explores opportunities by entity, location, or customer type
-7. User exports prioritized SEO strategy aligned to business structure
-8. System tracks progress over time
-Success Criteria
-* Generate comprehensive keyword clusters covering 90%+ of semantic footprint
-* Accurate search volume and ranking data
-* Clear, actionable opportunity identification
-* Strategy recommendations that align with business model
-* Users can build content roadmaps directly from the tool
-* Demonstrable ranking improvements when recommendations followed
-Technical Considerations
-* Handle API rate limits for search data
-* Process thousands of keywords efficiently
-* Store time-series ranking data
-* Calculate opportunity scores with configurable weighting
-* Handle multiple search engines (Google, Bing)
-* Provide data export in usable formats (CSV, spreadsheets)
-* Consider white-label or multi-tenant architecture for agencies
+# Phase 2: Entity Extraction & Knowledge Graph
+
+## Objective
+Extract business entities from crawled website pages using Exa Answer API and build the knowledge graph structure. Present entities in a robust table format for exploration and analysis.
+
+## Core Capabilities
+
+### 1. AI-Powered Entity Extraction
+* Use Exa Answer API to extract entities from website sources
+* Extract key business entities:
+    * Products/Services: What the business offers
+    * Locations: Geographic areas served (cities, regions, states)
+    * Customer Types: Target audiences, industries, personas
+    * Attributes: Key characteristics (free/paid, certifications, specializations, delivery methods)
+    * Competitors: Mentioned or implied competitive landscape
+* Process entities page by page, linking each entity to its source(s)
+* Normalize entities (e.g., "Denver, CO" and "Denver" become one entity) (v2)
+
+### 2. Entity Storage & Relationships
+* Store entities with types, attributes, and metadata
+* Link entities to their source pages (many-to-many relationship)
+* Build relationship connections between entities:
+    * Which services are offered for certain products
+    * Which attributes apply to which products/services
+    * Which state does a city belong to
+* Store directional graph structure for future visualization
+
+### 3. Onboarding Entity Extraction
+* Continue onboarding flow from Phase 1
+* Show entity extraction progress for first 10 pages
+* Display entities discovered during onboarding preview
+* Complete onboarding after showing extraction results
+* Direct user to main entities table page
+
+### 4. Entities Table View
+* Present all extracted entities in a robust, sortable table
+* Table columns:
+    * Entity name
+    * Entity type (Product/Service, Location, Customer Type, Attribute, Competitor)
+    * Related entities (links/relationships)
+    * Source count (number of pages mentioning this entity)
+    * Source links (expandable list of URLs)
+    * Attributes/metadata
+* Filtering capabilities:
+    * Filter by entity type
+    * Search by entity name
+    * Filter by source URL
+* Sorting by name, type, source count
+* Pagination for large entity sets
+
+### 5. Entity Detail View
+* Click entity row to see detailed view
+* Show all relationships (connected entities)
+* List all source pages mentioning this entity
+* Display entity attributes and metadata
+* Show extraction confidence/evidence (future enhancement)
+
+## User Flow
+1. User completes Phase 1 onboarding (website crawl)
+2. System begins entity extraction for first 10 pages (shows progress)
+3. User sees preview of entities discovered during onboarding
+4. Onboarding completes, user directed to entities table
+5. System continues extracting entities from remaining pages (background process)
+6. User explores entities table:
+    * Views all entities
+    * Filters by type or searches
+    * Clicks entity to see details and relationships
+    * Views source pages for each entity
+7. User can trigger re-extraction when website changes
+8. User can submit one-off requests to Exa Answer to update graph
+
+## Success Criteria
+* Accurately extract 80%+ of obvious business entities from website pages
+* Successfully link entities to their source pages
+* Generate meaningful relationship connections between entities
+* Display entities table that loads in <2 seconds for typical business (50-200 entities)
+* Process entity extraction within reasonable timeframe (5-10 minutes for typical site)
+* Provide clear entity detail views with relationships and sources
+
+## Technical Considerations
+* Handle websites of varying sizes (10 pages to 1,000 pages)
+* Process entity extraction efficiently (batch processing, queue jobs)
+* Store graph data efficiently for fast querying
+* LLM prompting strategy for consistent entity extraction
+* Handle Exa Answer API rate limits and errors
+* Store entity relationships for future graph visualization (Phase 3)
+* Normalize entity names to prevent duplicates
+* Track extraction status per source page
+
+## Database Schema
+* `entities` table:
+    * `id` (primary key)
+    * `name` (indexed)
+    * `type` (enum: product_service, location, customer_type, attribute, competitor)
+    * `normalized_name` (for deduplication)
+    * `attributes` (JSON)
+    * `metadata` (JSON)
+    * `created_at` (timestamp)
+    * `updated_at` (timestamp)
+* `source_entity` pivot table:
+    * `source_id` (foreign key to sources)
+    * `entity_id` (foreign key to entities)
+    * `created_at` (timestamp)
+* `entity_relationships` table:
+    * `id` (primary key)
+    * `source_entity_id` (foreign key to entities)
+    * `target_entity_id` (foreign key to entities)
+    * `relationship_type` (enum: offers, applies_to, belongs_to, etc.)
+    * `created_at` (timestamp)
+
+## Future Enhancements (Phase 3+)
+* Interactive graph visualization
+* Business intelligence dashboard
+* Advanced relationship mapping
+* Entity normalization improvements
+* Query interface ("Show all services in Denver")
