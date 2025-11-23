@@ -81,7 +81,7 @@ const toggleMobileAdmin = () => {
                 <router-link to="/" class="text-lg font-semibold text-neutral-900">AI Graph</router-link>
 
                 <div v-if="isAuthenticated" class="hidden items-center gap-1 text-sm font-medium text-neutral-500 md:flex">
-                    <router-link :to="{ name: 'knowledge-graphs.index' }" :class="[navLinkClasses, { [activeNavClasses]: isRouteActive('knowledge-graphs.index') }]">
+                    <router-link :to="{ name: 'graphs.index' }" :class="[navLinkClasses, { [activeNavClasses]: isRouteActive('graphs.index') }]">
                         Graphs
                     </router-link>
                     <router-link v-if="isAdmin" :to="{ name: 'dashboard' }" :class="[navLinkClasses, { [activeNavClasses]: isRouteActive('dashboard') }]">
@@ -176,14 +176,14 @@ const toggleMobileAdmin = () => {
                     <div class="mx-auto flex w-full max-w-[1563px] flex-col gap-4 px-4 sm:px-6 lg:px-8">
                         <div class="space-y-2 text-sm font-medium text-neutral-600">
                             <router-link
-                                :to="{ name: 'knowledge-graphs.index' }"
+                                :to="{ name: 'graphs.index' }"
                                 :class="[
                                     'block rounded-xl px-3 py-2 transition hover:bg-neutral-100 hover:text-neutral-900',
-                                    { 'bg-neutral-900 text-white hover:bg-neutral-900 hover:text-white': isRouteActive('knowledge-graphs.index') }
+                                    { 'bg-neutral-900 text-white hover:bg-neutral-900 hover:text-white': isRouteActive('graphs.index') }
                                 ]"
                                 @click="closeMobileMenu"
                             >
-                                Knowledge Graphs
+                                Graphs
                             </router-link>
                             <router-link
                                 v-if="isAdmin"

@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\KnowledgeGraph;
+use App\Models\Graph;
 use App\Models\Source;
 use Illuminate\Http\Request;
 
 class SourceController extends Controller
 {
     /**
-     * Display a paginated listing of sources for a knowledge graph
+     * Display a paginated listing of sources for a graph
      */
-    public function index(Request $request, KnowledgeGraph $knowledgeGraph)
+    public function index(Request $request, Graph $graph)
     {
-        // Ensure user owns this knowledge graph
-        if ($knowledgeGraph->user_id !== $request->user()->id) {
+        // Ensure user owns this graph
+        if ($graph->user_id !== $request->user()->id) {
             abort(403);
         }
 
@@ -31,7 +31,7 @@ class SourceController extends Controller
         $sortBy = $request->input('sort_by', 'discovered_at');
         $sortOrder = $request->input('sort_order', 'desc');
 
-        $query = Source::where('knowledge_graph_id', $knowledgeGraph->id);
+        $query = Source::where('graph_id', $graph->id);
 
         // Apply search filter
         if ($search) {

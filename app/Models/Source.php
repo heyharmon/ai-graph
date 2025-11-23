@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Source extends Model
 {
     protected $fillable = [
-        'knowledge_graph_id',
+        'graph_id',
         'url',
         'title',
         'status',
@@ -22,8 +22,8 @@ class Source extends Model
         ];
     }
 
-    public function knowledgeGraph(): BelongsTo
+    public function graph(): BelongsTo
     {
-        return $this->belongsTo(KnowledgeGraph::class);
+        return $this->belongsTo(Graph::class);
     }
 }

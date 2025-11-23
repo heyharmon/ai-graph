@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\KnowledgeGraph;
+use App\Models\Graph;
 use App\Models\Source;
 use App\Services\Sitemap\SitemapCrawlerService;
 use Illuminate\Http\Request;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
-class KnowledgeGraphController extends Controller
+class GraphController extends Controller
 {
     protected SitemapCrawlerService $crawler;
 
@@ -21,7 +21,7 @@ class KnowledgeGraphController extends Controller
     }
 
     /**
-     * Store a newly created knowledge graph and crawl sitemap
+     * Store a newly created graph and crawl sitemap
      */
     public function store(Request $request)
     {
@@ -38,14 +38,14 @@ class KnowledgeGraphController extends Controller
             ]);
         }
 
-        // Check if user already has a knowledge graph for this website
-        $existingGraph = KnowledgeGraph::where('user_id', $user->id)
+        // Check if user already has a graph for this website
+        $existingGraph = Graph::where('user_id', $user->id)
             ->where('website_url', $websiteUrl)
             ->first();
 
         if ($existingGraph) {
             return response()->json([
-                'knowledge_graph' => $existingGraph,
+                'graph' => $existingGraph,
             ]);
         }
 
@@ -59,10 +59,10 @@ class KnowledgeGraphController extends Controller
                 ]);
             }
 
-            // Create knowledge graph and sources in a transaction
+            // Create graph and sources in a transaction
             DB::beginTransaction();
 
-            $knowledgeGraph = KnowledgeGraph::create([
+            $graph = Graph::create([
                 'user_id' => $user->id,
                 'website_url' => $websiteUrl,
                 'sources_count' => count($sources),
@@ -71,7 +71,7 @@ class KnowledgeGraphController extends Controller
             $sourcesToInsert = [];
             foreach ($sources as $source) {
                 $sourcesToInsert[] = [
-                    'knowledge_graph_id' => $knowledgeGraph->id,
+                    'graph_id' => $graph->id,
                     'url' => $source['url'],
                     'title' => $source['title'],
                     'status' => 'discovered',
@@ -89,10 +89,10 @@ class KnowledgeGraphController extends Controller
             DB::commit();
 
             // Refresh to get updated sources_count
-            $knowledgeGraph->refresh();
+            $graph->refresh();
 
             return response()->json([
-                'knowledge_graph' => $knowledgeGraph,
+                'graph' => $graph,
             ], 201);
 
         } catch (ValidationException $e) {
@@ -100,7 +100,7 @@ class KnowledgeGraphController extends Controller
             throw $e;
         } catch (\Throwable $e) {
             DB::rollBack();
-            Log::error('Failed to create knowledge graph', [
+            Log::error('Failed to create graph', [
                 'user_id' => $user->id,
                 'website_url' => $websiteUrl,
                 'error' => $e->getMessage(),
@@ -115,32 +115,32 @@ class KnowledgeGraphController extends Controller
     }
 
     /**
-     * Display the specified knowledge graph
+     * Display the specified graph
      */
-    public function show(Request $request, KnowledgeGraph $knowledgeGraph)
+    public function show(Request $request, Graph $graph)
     {
-        // Ensure user owns this knowledge graph
-        if ($knowledgeGraph->user_id !== $request->user()->id) {
+        // Ensure user owns this graph
+        if ($graph->user_id !== $request->user()->id) {
             abort(403);
         }
 
         return response()->json([
-            'knowledge_graph' => $knowledgeGraph,
+            'graph' => $graph,
         ]);
     }
 
     /**
-     * List all knowledge graphs for the authenticated user
+     * List all graphs for the authenticated user
      */
     public function index(Request $request)
     {
-        $knowledgeGraphs = KnowledgeGraph::where('user_id', $request->user()->id)
+        $graphs = Graph::where('user_id', $request->user()->id)
             ->withCount('sources')
             ->latest()
             ->get();
 
         return response()->json([
-            'knowledge_graphs' => $knowledgeGraphs,
+            'graphs' => $graphs,
         ]);
     }
 

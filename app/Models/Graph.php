@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class KnowledgeGraph extends Model
+class Graph extends Model
 {
+    protected $table = 'graphs';
+
     protected $fillable = [
         'user_id',
         'website_url',

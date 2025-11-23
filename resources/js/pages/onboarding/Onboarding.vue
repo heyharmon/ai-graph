@@ -2,13 +2,13 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
-import knowledgeGraph from '@/services/knowledgeGraph'
+import graph from '@/services/graph'
 
 const router = useRouter()
 const websiteUrl = ref('')
 const loading = ref(false)
 const error = ref('')
-const knowledgeGraphData = ref(null)
+const graphData = ref(null)
 const totalSources = ref(0)
 
 const submitWebsite = async () => {
@@ -19,18 +19,18 @@ const submitWebsite = async () => {
 
     loading.value = true
     error.value = ''
-    knowledgeGraphData.value = null
+    graphData.value = null
     totalSources.value = 0
 
     try {
-        const response = await knowledgeGraph.create(websiteUrl.value.trim())
+        const response = await graph.create(websiteUrl.value.trim())
         
-        knowledgeGraphData.value = response.knowledge_graph
-        totalSources.value = response.knowledge_graph.sources_count || 0
+        graphData.value = response.graph
+        totalSources.value = response.graph.sources_count || 0
         
         // Auto-redirect to sources page after 2 seconds
         setTimeout(() => {
-            router.push(`/knowledge-graphs/${knowledgeGraphData.value.id}/sources`)
+            router.push(`/graphs/${graphData.value.id}/sources`)
         }, 2000)
     } catch (err) {
         error.value = err.message || err.website_url?.[0] || 'Failed to crawl website. Please try again.'
@@ -40,8 +40,8 @@ const submitWebsite = async () => {
 }
 
 const viewSources = () => {
-    if (knowledgeGraphData.value) {
-        router.push(`/knowledge-graphs/${knowledgeGraphData.value.id}/sources`)
+    if (graphData.value) {
+        router.push(`/graphs/${graphData.value.id}/sources`)
     }
 }
 </script>
@@ -51,13 +51,13 @@ const viewSources = () => {
         <div class="flex min-h-screen items-center justify-center bg-neutral-50 py-12">
             <div class="w-full max-w-3xl">
             <div class="mb-8 text-center">
-                <h1 class="mb-2 text-3xl font-bold text-neutral-900">Create Your Knowledge Graph</h1>
+                <h1 class="mb-2 text-3xl font-bold text-neutral-900">Create Your Graph</h1>
                 <p class="text-neutral-600">Enter your website URL to discover all pages</p>
             </div>
 
             <div class="rounded-lg border border-neutral-200 bg-white p-8 shadow-sm">
                 <!-- Input Form -->
-                <div v-if="!knowledgeGraphData" class="space-y-4">
+                <div v-if="!graphData" class="space-y-4">
                     <div v-if="error" class="rounded-md bg-red-50 p-4 text-sm text-red-500">
                         {{ error }}
                     </div>
@@ -108,7 +108,7 @@ const viewSources = () => {
                     <div class="flex justify-end space-x-4">
                         <button
                             type="button"
-                            @click="knowledgeGraphData = null; totalSources = 0"
+                            @click="graphData = null; totalSources = 0"
                             class="rounded-md border border-neutral-300 px-4 py-2 text-neutral-700 hover:bg-neutral-50 focus:outline-none"
                         >
                             Start Over

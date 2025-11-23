@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\KnowledgeGraphController;
+use App\Http\Controllers\GraphController;
 use App\Http\Controllers\SourceController;
 
 // Public routes
@@ -16,11 +16,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
 
-    // Knowledge Graphs
-    Route::apiResource('knowledge-graphs', KnowledgeGraphController::class)->only(['index', 'store', 'show']);
+    // Graphs
+    Route::apiResource('graphs', GraphController::class)->only(['index', 'store', 'show']);
     
-    // Sources (nested under knowledge graphs)
-    Route::get('knowledge-graphs/{knowledgeGraph}/sources', [SourceController::class, 'index']);
+    // Sources (nested under graphs)
+    Route::get('graphs/{graph}/sources', [SourceController::class, 'index']);
 
     // Admin-only routes
     Route::middleware('admin')->group(function () {

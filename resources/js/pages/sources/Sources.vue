@@ -2,11 +2,11 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
-import knowledgeGraph from '@/services/knowledgeGraph'
+import graph from '@/services/graph'
 
 const route = useRoute()
 const router = useRouter()
-const knowledgeGraphId = ref(route.params.id)
+const graphId = ref(route.params.id)
 
 const sources = ref([])
 const loading = ref(false)
@@ -41,7 +41,7 @@ const fetchSources = async () => {
             params.search = searchQuery.value.trim()
         }
 
-        const response = await knowledgeGraph.getSources(knowledgeGraphId.value, params)
+        const response = await graph.getSources(graphId.value, params)
         
         sources.value = response.sources || []
         pagination.value = response.pagination || pagination.value
@@ -88,7 +88,7 @@ onMounted(() => {
 // Watch for route param changes
 watch(() => route.params.id, (newId) => {
     if (newId) {
-        knowledgeGraphId.value = newId
+        graphId.value = newId
         currentPage.value = 1
         fetchSources()
     }
@@ -103,7 +103,7 @@ watch(() => route.params.id, (newId) => {
             <div class="mb-6">
                 <h1 class="text-3xl font-bold text-neutral-900">Sources</h1>
                 <p class="mt-1 text-neutral-600">
-                    View and manage all discovered sources for this knowledge graph
+                    View and manage all discovered sources for this graph
                 </p>
             </div>
 

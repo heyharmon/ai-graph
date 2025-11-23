@@ -50,8 +50,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function knowledgeGraphs(): HasMany
+    public function graphs(): HasMany
     {
-        return $this->hasMany(KnowledgeGraph::class);
+        return $this->hasMany(Graph::class);
     }
 }
