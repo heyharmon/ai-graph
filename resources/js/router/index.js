@@ -5,9 +5,16 @@ import Register from '@/pages/auth/Register.vue'
 import UsersIndex from '@/pages/users/UsersIndex.vue'
 import UserShow from '@/pages/users/UserShow.vue'
 import Dashboard from '@/pages/dashboard/Dashboard.vue'
+import Onboarding from '@/pages/onboarding/Onboarding.vue'
 
 const routes = [
-  {
+    {
+        path: '/',
+        name: 'onboarding',
+        component: Onboarding,
+        meta: { requiresAuth: true }
+    },
+    {
         path: '/admin',
         name: 'dashboard',
         component: Dashboard,

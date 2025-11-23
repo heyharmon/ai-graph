@@ -49,4 +49,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function knowledgeGraphs(): HasMany
+    {
+        return $this->hasMany(KnowledgeGraph::class);
+    }
 }
