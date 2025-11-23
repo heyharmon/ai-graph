@@ -6,6 +6,8 @@ import UsersIndex from '@/pages/users/UsersIndex.vue'
 import UserShow from '@/pages/users/UserShow.vue'
 import Dashboard from '@/pages/dashboard/Dashboard.vue'
 import Onboarding from '@/pages/onboarding/Onboarding.vue'
+import Sources from '@/pages/sources/Sources.vue'
+import KnowledgeGraphsIndex from '@/pages/knowledge-graphs/KnowledgeGraphsIndex.vue'
 
 const routes = [
     {
@@ -43,6 +45,18 @@ const routes = [
         name: 'users.show',
         component: UserShow,
         meta: { requiresAuth: true, roles: ['admin'] }
+    },
+    {
+        path: '/knowledge-graphs',
+        name: 'knowledge-graphs.index',
+        component: KnowledgeGraphsIndex,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/knowledge-graphs/:id/sources',
+        name: 'sources.index',
+        component: Sources,
+        meta: { requiresAuth: true }
     },
 ]
 

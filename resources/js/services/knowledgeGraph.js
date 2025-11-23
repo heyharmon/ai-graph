@@ -16,6 +16,12 @@ const knowledgeGraph = {
     async getById(id) {
         const response = await api.get(`/knowledge-graphs/${id}`)
         return response
+    },
+
+    async getSources(knowledgeGraphId, params = {}) {
+        const queryString = new URLSearchParams(params).toString()
+        const response = await api.get(`/knowledge-graphs/${knowledgeGraphId}/sources${queryString ? '?' + queryString : ''}`)
+        return response
     }
 }
 

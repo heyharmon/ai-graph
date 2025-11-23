@@ -45,8 +45,7 @@ class KnowledgeGraphController extends Controller
 
         if ($existingGraph) {
             return response()->json([
-                'knowledge_graph' => $existingGraph->load('sources'),
-                'sources_preview' => $existingGraph->sources()->limit(10)->get(),
+                'knowledge_graph' => $existingGraph,
             ]);
         }
 
@@ -93,8 +92,7 @@ class KnowledgeGraphController extends Controller
             $knowledgeGraph->refresh();
 
             return response()->json([
-                'knowledge_graph' => $knowledgeGraph->load('sources'),
-                'sources_preview' => $knowledgeGraph->sources()->limit(10)->get(),
+                'knowledge_graph' => $knowledgeGraph,
             ], 201);
 
         } catch (ValidationException $e) {
@@ -127,8 +125,7 @@ class KnowledgeGraphController extends Controller
         }
 
         return response()->json([
-            'knowledge_graph' => $knowledgeGraph->load('sources'),
-            'sources_preview' => $knowledgeGraph->sources()->limit(10)->get(),
+            'knowledge_graph' => $knowledgeGraph,
         ]);
     }
 
