@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, watch, computed, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import * as d3 from 'd3'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
@@ -41,34 +41,75 @@ const fetchGraph = async () => {
     try {
         graph.value = await graphService.show(graphId.value)
         if (graph.value.status === 'completed') {
+            await nextTick()
             await renderGraph()
         }
     } catch (err) {
         error.value = err?.message || 'Failed to load graph.'
+        console.error('Error fetching graph:', err)
     } finally {
         loading.value = false
     }
 }
 
 const renderGraph = async () => {
-    if (!graph.value || !graph.value.entities || graph.value.entities.length === 0) {
+    if (!graph.value) {
+        console.log('No graph data')
         return
     }
 
+    if (!graph.value.entities || graph.value.entities.length === 0) {
+        console.log('No entities to render', { 
+            graph: graph.value,
+            entities: graph.value.entities,
+            relationships: graph.value.relationships
+        })
+        return
+    }
+
+    // Wait for next tick to ensure DOM is ready
+    await nextTick()
+    await new Promise(resolve => setTimeout(resolve, 50))
+
     // Clear existing SVG
-    d3.select('#graph-container').selectAll('*').remove()
+    const container = d3.select('#graph-container')
+    if (container.empty()) {
+        console.error('Graph container not found - retrying in 200ms')
+        setTimeout(() => renderGraph(), 200)
+        return
+    }
+    
+    container.selectAll('*').remove()
 
     const width = 1200
     const height = 800
-    const svg = d3.select('#graph-container')
+    const svg = container
         .append('svg')
         .attr('width', width)
         .attr('height', height)
 
     // Get filtered entities based on current filters
-    const entitiesToShow = filteredEntities.value.length > 0 
-        ? filteredEntities.value 
-        : graph.value.entities
+    const entitiesToShow = filteredEntities.value
+
+    console.log('Rendering graph', {
+        totalEntities: graph.value.entities?.length || 0,
+        filteredEntities: entitiesToShow.length,
+        relationships: graph.value.relationships?.length || 0,
+        entities: graph.value.entities,
+        filtered: entitiesToShow
+    })
+
+    if (entitiesToShow.length === 0) {
+        console.log('No entities to show after filtering')
+        svg.append('text')
+            .attr('x', width / 2)
+            .attr('y', height / 2)
+            .attr('text-anchor', 'middle')
+            .attr('font-size', '16px')
+            .attr('fill', '#666')
+            .text('No entities match the current filters')
+        return
+    }
 
     // Create a map of entity IDs to entities for quick lookup
     const entityMap = new Map()
@@ -77,10 +118,25 @@ const renderGraph = async () => {
     })
 
     // Prepare relationships for D3 (only include relationships between visible entities)
+    // Handle both cases: relationships with IDs or nested entity objects
     const links = (graph.value.relationships || []).map(rel => {
-        const sourceEntity = entityMap.get(rel.from_entity_id)
-        const targetEntity = entityMap.get(rel.to_entity_id)
-        if (!sourceEntity || !targetEntity) return null
+        // Get entity IDs - handle both nested objects and direct IDs
+        const fromId = rel.from_entity_id || rel.fromEntity?.id || rel.from_entity?.id
+        const toId = rel.to_entity_id || rel.toEntity?.id || rel.to_entity?.id
+        
+        const sourceEntity = entityMap.get(fromId)
+        const targetEntity = entityMap.get(toId)
+        
+        if (!sourceEntity || !targetEntity) {
+            console.log('Skipping relationship - entity not found', {
+                fromId,
+                toId,
+                rel,
+                availableIds: Array.from(entityMap.keys())
+            })
+            return null
+        }
+        
         return {
             source: sourceEntity,
             target: targetEntity,
@@ -88,6 +144,8 @@ const renderGraph = async () => {
             strength: rel.strength || 1.0,
         }
     }).filter(link => link !== null)
+
+    console.log('Created links', links.length)
 
     // Create force simulation
     const simulation = d3.forceSimulation(entitiesToShow)
@@ -141,18 +199,30 @@ const renderGraph = async () => {
     // Update positions on simulation tick
     simulation.on('tick', () => {
         link
-            .attr('x1', d => d.source.x)
-            .attr('y1', d => d.source.y)
-            .attr('x2', d => d.target.x)
-            .attr('y2', d => d.target.y)
+            .attr('x1', d => {
+                const source = typeof d.source === 'object' ? d.source : entityMap.get(d.source)
+                return source?.x || 0
+            })
+            .attr('y1', d => {
+                const source = typeof d.source === 'object' ? d.source : entityMap.get(d.source)
+                return source?.y || 0
+            })
+            .attr('x2', d => {
+                const target = typeof d.target === 'object' ? d.target : entityMap.get(d.target)
+                return target?.x || 0
+            })
+            .attr('y2', d => {
+                const target = typeof d.target === 'object' ? d.target : entityMap.get(d.target)
+                return target?.y || 0
+            })
 
         node
-            .attr('cx', d => d.x)
-            .attr('cy', d => d.y)
+            .attr('cx', d => d.x || 0)
+            .attr('cy', d => d.y || 0)
 
         label
-            .attr('x', d => d.x)
-            .attr('y', d => d.y)
+            .attr('x', d => d.x || 0)
+            .attr('y', d => d.y || 0)
     })
 
     // Drag handler
@@ -204,9 +274,10 @@ const filteredEntities = computed(() => {
 })
 
 // Watch for filter changes and re-render graph
-watch([searchQuery, selectedEntityType], () => {
+watch([searchQuery, selectedEntityType], async () => {
     if (graph.value && graph.value.status === 'completed') {
-        renderGraph()
+        await nextTick()
+        await renderGraph()
     }
 })
 
