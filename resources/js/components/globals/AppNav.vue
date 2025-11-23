@@ -81,11 +81,8 @@ const toggleMobileAdmin = () => {
                 <router-link to="/" class="text-lg font-semibold text-neutral-900">AI Graph</router-link>
 
                 <div v-if="isAuthenticated" class="hidden items-center gap-1 text-sm font-medium text-neutral-500 md:flex">
-                    <router-link :to="{ name: 'graphs.index' }" :class="[navLinkClasses, { [activeNavClasses]: isRouteActive('graphs.index') }]">
+                    <router-link :to="{ name: 'graphs.index' }" :class="[navLinkClasses, { [activeNavClasses]: isRouteActive('graphs.index') || isRouteActive('home') }]">
                         Graphs
-                    </router-link>
-                    <router-link v-if="isAdmin" :to="{ name: 'dashboard' }" :class="[navLinkClasses, { [activeNavClasses]: isRouteActive('dashboard') }]">
-                        Dashboard
                     </router-link>
                 </div>
                 <button
@@ -179,22 +176,11 @@ const toggleMobileAdmin = () => {
                                 :to="{ name: 'graphs.index' }"
                                 :class="[
                                     'block rounded-xl px-3 py-2 transition hover:bg-neutral-100 hover:text-neutral-900',
-                                    { 'bg-neutral-900 text-white hover:bg-neutral-900 hover:text-white': isRouteActive('graphs.index') }
+                                    { 'bg-neutral-900 text-white hover:bg-neutral-900 hover:text-white': isRouteActive('graphs.index') || isRouteActive('home') }
                                 ]"
                                 @click="closeMobileMenu"
                             >
                                 Graphs
-                            </router-link>
-                            <router-link
-                                v-if="isAdmin"
-                                :to="{ name: 'dashboard' }"
-                                :class="[
-                                    'block rounded-xl px-3 py-2 transition hover:bg-neutral-100 hover:text-neutral-900',
-                                    { 'bg-neutral-900 text-white hover:bg-neutral-900 hover:text-white': isRouteActive('dashboard') }
-                                ]"
-                                @click="closeMobileMenu"
-                            >
-                                Dashboard
                             </router-link>
                         </div>
 

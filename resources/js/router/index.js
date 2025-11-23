@@ -4,23 +4,22 @@ import Login from '@/pages/auth/Login.vue'
 import Register from '@/pages/auth/Register.vue'
 import UsersIndex from '@/pages/users/UsersIndex.vue'
 import UserShow from '@/pages/users/UserShow.vue'
-import Dashboard from '@/pages/dashboard/Dashboard.vue'
-import Onboarding from '@/pages/onboarding/Onboarding.vue'
 import Sources from '@/pages/sources/Sources.vue'
 import GraphsIndex from '@/pages/graphs/GraphsIndex.vue'
+import GraphsCreate from '@/pages/graphs/GraphsCreate.vue'
 
 const routes = [
     {
         path: '/',
-        name: 'onboarding',
-        component: Onboarding,
+        name: 'home',
+        component: GraphsIndex,
         meta: { requiresAuth: true }
     },
     {
-        path: '/admin',
-        name: 'dashboard',
-        component: Dashboard,
-        meta: { requiresAuth: true, roles: ['dashboard'] }
+        path: '/graphs/create',
+        name: 'graphs.create',
+        component: GraphsCreate,
+        meta: { requiresAuth: true }
     },
     {
         path: '/login',
@@ -78,7 +77,7 @@ router.beforeEach((to, from, next) => {
         }
     } else if (to.matched.some((record) => record.meta.guest)) {
         if (token) {
-            next({ name: 'admin' })
+            next({ name: 'graphs.index' })
         } else {
             next()
         }

@@ -42,7 +42,7 @@ const formatDate = (date) => {
                     <p class="text-sm text-neutral-500">Manage your graphs</p>
                 </div>
                 <router-link
-                    to="/"
+                    :to="{ name: 'graphs.create' }"
                     class="inline-flex items-center rounded-md border border-neutral-900 bg-neutral-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-neutral-800"
                 >
                     Create New
@@ -90,7 +90,7 @@ const formatDate = (date) => {
                             <tr v-if="!graphs.length && !loading">
                                 <td colspan="4" class="px-4 py-6 text-center text-sm text-neutral-500">
                                     No graphs found. 
-                                    <router-link to="/" class="text-blue-600 hover:underline">Create your first one</router-link>
+                                    <router-link :to="{ name: 'graphs.create' }" class="text-blue-600 hover:underline">Create your first one</router-link>
                                 </td>
                             </tr>
                         </tbody>
@@ -125,7 +125,7 @@ const formatDate = (date) => {
                         class="rounded-xl border border-dashed border-neutral-300 bg-white/60 p-6 text-center text-sm text-neutral-500"
                     >
                         No graphs found.
-                        <router-link to="/" class="block mt-2 text-blue-600 hover:underline">Create your first one</router-link>
+                        <router-link :to="{ name: 'graphs.create' }" class="block mt-2 text-blue-600 hover:underline">Create your first one</router-link>
                     </div>
                 </div>
             </div>

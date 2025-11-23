@@ -1,10 +1,10 @@
 <script setup>
-import AdminNav from '@/components/globals/AdminNav.vue'
+import AppNav from '@/components/globals/AppNav.vue'
 </script>
 
 <template>
     <div class="min-h-screen bg-white">
-        <AdminNav />
+        <AppNav />
 
         <main class="max-w-[1563px] mx-auto px-4">
             <slot />

@@ -1,5 +1,5 @@
 <script setup>
-import AdminNav from '@/components/globals/AdminNav.vue'
+import AppNav from '@/components/globals/AppNav.vue'
 
 defineProps({
     sidebarWidth: {
@@ -11,7 +11,7 @@ defineProps({
 
 <template>
     <div class="flex min-h-screen flex-col bg-neutral-50">
-        <AdminNav />
+        <AppNav />
 
         <div class="mx-auto flex w-full flex-1 min-h-0 flex-col overflow-hidden lg:flex-row">
             <aside
