@@ -11,6 +11,8 @@ class Source extends Model
         'graph_id',
         'url',
         'title',
+        'source',
+        'type',
         'status',
         'discovered_at',
     ];

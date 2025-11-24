@@ -179,6 +179,24 @@ watch(() => route.params.id, (newId) => {
                                             {{ sortOrder === 'asc' ? '↑' : '↓' }}
                                         </span>
                                     </th>
+                                    <th
+                                        @click="handleSort('source')"
+                                        class="cursor-pointer px-4 py-3 text-left hover:bg-neutral-100"
+                                    >
+                                        Source
+                                        <span v-if="sortBy === 'source'" class="ml-1">
+                                            {{ sortOrder === 'asc' ? '↑' : '↓' }}
+                                        </span>
+                                    </th>
+                                    <th
+                                        @click="handleSort('type')"
+                                        class="cursor-pointer px-4 py-3 text-left hover:bg-neutral-100"
+                                    >
+                                        Type
+                                        <span v-if="sortBy === 'type'" class="ml-1">
+                                            {{ sortOrder === 'asc' ? '↑' : '↓' }}
+                                        </span>
+                                    </th>
                                     <th class="px-4 py-3 text-left">Status</th>
                                     <th
                                         @click="handleSort('discovered_at')"
@@ -213,6 +231,12 @@ watch(() => route.params.id, (newId) => {
                                             {{ source.url }}
                                         </a>
                                     </td>
+                                    <td class="px-4 py-3 text-sm text-neutral-600">
+                                        {{ source.source || '-' }}
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-neutral-600">
+                                        {{ source.type || '-' }}
+                                    </td>
                                     <td class="whitespace-nowrap px-4 py-3">
                                         <span
                                             :class="{
@@ -229,7 +253,7 @@ watch(() => route.params.id, (newId) => {
                                     </td>
                                 </tr>
                                 <tr v-if="!sources.length && !loading">
-                                    <td colspan="5" class="px-4 py-6 text-center text-sm text-neutral-500">
+                                    <td colspan="7" class="px-4 py-6 text-center text-sm text-neutral-500">
                                         <span v-if="searchQuery">No sources found matching your search.</span>
                                         <span v-else>No sources found.</span>
                                     </td>
@@ -269,8 +293,10 @@ watch(() => route.params.id, (newId) => {
                                     {{ source.status }}
                                 </span>
                             </div>
-                            <div class="mt-3 text-xs text-neutral-500">
-                                Discovered {{ formatDate(source.discovered_at) }}
+                            <div class="mt-3 flex items-center gap-4 text-xs text-neutral-500">
+                                <span v-if="source.source">{{ source.source }}</span>
+                                <span v-if="source.type">{{ source.type }}</span>
+                                <span>Discovered {{ formatDate(source.discovered_at) }}</span>
                             </div>
                         </div>
                         <div

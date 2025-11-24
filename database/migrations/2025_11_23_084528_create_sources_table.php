@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('graph_id')->constrained('graphs')->onDelete('cascade');
             $table->string('url');
             $table->string('title')->nullable();
+            $table->string('source')->nullable();
+            $table->string('type')->nullable();
             $table->enum('status', ['discovered', 'failed'])->default('discovered');
             $table->timestamp('discovered_at')->nullable();
             $table->timestamps();

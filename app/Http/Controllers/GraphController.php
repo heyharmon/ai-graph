@@ -74,6 +74,7 @@ class GraphController extends Controller
                     'graph_id' => $graph->id,
                     'url' => $source['url'],
                     'title' => $source['title'],
+                    'source' => 'website',
                     'status' => 'discovered',
                     'discovered_at' => now(),
                     'created_at' => now(),
